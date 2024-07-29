@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Flying Sales Comparison</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+    <style>
+        input[type="date"] {
+            display: block;
+            margin: 10px 0;
+            padding: 5px;
+            font-size: 16px;
+            color: #bfbcbc;
+            background: transparent; /* Make the background transparent */
+            border: 1px solid #ccc; /* Optional: Add border to match the design */
+            border-radius: 4px; /* Optional: Add rounded corners */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .date-inputs {
+            display: flex;
+            gap: 1px; /* Adjust the space between the inputs */
+            margin-bottom: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            position: relative;
+            left: 200px;
+
+        }
+        .date-inputs .form-group {
+            flex: 1;
+        }
+    </style>
+</head>
+<body class="is-preload">
+    <!-- Sidebar -->
+    <section id="sidebar">
+        <div class="inner">
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
+                    <li><a href="{{ url_for('compare') }}">Compare</a></li>
+                    <li><a href="{{ url_for('optimal_call_times') }}">Optimal Call Times</a></li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <!-- Comparison Section -->
+        <section id="intro" class="wrapper style1 fullscreen fade-up">
+            <div class="inner">
+                <h2>Compare</h2>
+                <form action="{{ url_for('compare') }}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="file" class="button fit">Choose File</label>
+                        <input type="file" id="file" name="file" style="display: none;" required>
+                    </div>
+                    <div class="date-inputs">
+                        <div class="form-group">
+                            <label for="date1">Choose 1st Date</label>
+                            <input type="date" id="date1" name="date1" placeholder="mm" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date2">Choose 2nd Date</label>
+                            <input type="date" id="date2" name="date2" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="submit" class="button fit">Compare</label>
+                        <input type="submit" id="submit" name="submit" style="display: none;">
+                    </div>
+                </form>
+
+                <!-- Display chosen file name -->
+                <p id="file-name" style="margin-top: 10px;"></p>
+
+                <!-- Display results for Date 1 -->
+                {% if results_day1 %}
+                <div class="results">
+                    <h3>Results for {{ date1 }}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ville</th>
+                                <th>Profession</th>
+                                <th>Taux Positif</th>
+                                <th>Taux Négatif</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results_day1 %}
+                            <tr>
+                                <td>{{ result['Ville'] }}</td>
+                                <td>{{ result['Profession'] }}</td>
+                                <td>{{ result['taux_positif'] * 100 | round(2) }}%</td>
+                                <td>{{ result['taux_negatif'] * 100 | round(2) }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                <!-- Display results for Date 2 -->
+                {% if results_day2 %}
+                <div class="results">
+                    <h3>Results for {{ date2 }}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ville</th>
+                                <th>Profession</th>
+                                <th>Taux Positif</th>
+                                <th>Taux Négatif</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results_day2 %}
+                            <tr>
+                                <td>{{ result['Ville'] }}</td>
+                                <td>{{ result['Profession'] }}</td>
+                                <td>{{ result['taux_positif'] * 100 | round(2) }}%</td>
+                                <td>{{ result['taux_negatif'] * 100 | round(2) }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="wrapper style1-alt">
+        <div class="inner">
+            <ul class="menu">
+                <li>&copy; Flying Sales. All rights reserved.</li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.scrollex.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.scrolly.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.getElementById('file').addEventListener('change', function() {
+            document.querySelector('label[for="file"]').textContent = this.files[0].name;
+            document.getElementById('file-name').textContent = 'Chosen file: ' + this.files[0].name;
+        });
+    </script>
+</body>
+</html>

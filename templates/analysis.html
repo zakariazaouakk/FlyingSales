@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Flying Sales Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+</head>
+<body class="is-preload">
+    <!-- Sidebar -->
+    <section id="sidebar">
+        <div class="inner">
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
+                    <li><a href="{{ url_for('compare') }}">Compare</a></li>
+                    <li><a href="{{ url_for('optimal_call_times') }}">Optimal Call Times</a></li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <!-- Analysis Section -->
+        <section id="intro" class="wrapper style1 fullscreen fade-up">
+            <div class="inner">
+                <h2>Analysis</h2>
+                <form action="{{ url_for('analysis') }}" method="post" enctype="multipart/form-data">
+                    <label for="file" class="button fit">Choose File</label>
+                    <input type="file" id="file" name="file" style="display: none;" onchange="this.form.submit();">
+                    <noscript><input type="submit" value="Upload" class="button primary fit"></noscript>
+                </form>
+
+                <!-- Display sentiment results -->
+                {% if sentiment_results %}
+                <div class="results">
+                    <h3>Sentiment Analysis Results</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ville</th>
+                                <th>Profession</th>
+                                <th>Positif</th>
+                                <th>Négatif</th>
+                                <th>Taux Positif</th>
+                                <th>Taux Négatif</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in sentiment_results %}
+                            <tr>
+                                <td>{{ result['Ville'] }}</td>
+                                <td>{{ result['Profession'] }}</td>
+                                <td>{{ result['positif'] }}</td>
+                                <td>{{ result['negatif'] }}</td>
+                                <td>{{ result['taux positif'] * 100 | round(2) }}%</td>
+                                <td>{{ result['taux negatif'] * 100 | round(2) }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                <!-- Display optimal call times -->
+                {% if optimal_results %}
+                <div class="results">
+                    <h3>Optimal Call Times</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ville</th>
+                                <th>Profession</th>
+                                <th>Optimal Call Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in optimal_results %}
+                            <tr>
+                                <td>{{ result['Ville'] }}</td>
+                                <td>{{ result['Profession'] }}</td>
+                                <td>{{ result['Time'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="wrapper style1-alt">
+        <div class="inner">
+            <ul class="menu">
+                <li>&copy; Flying Sales. All rights reserved.</li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.scrollex.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.scrolly.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.getElementById('file').addEventListener('change', function() {
+            document.querySelector('label[for="file"]').textContent = this.files[0].name;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Flying Sales - Optimal Call Times</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+</head>
+<body class="is-preload">
+
+    <!-- Sidebar -->
+    <section id="sidebar">
+        <div class="inner">
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('analysis') }}">Analysis</a></li>
+                    <li><a href="{{ url_for('compare') }}">Compare</a></li>
+                    <li><a href="{{ url_for('optimal_call_times') }}">Optimal Call Times</a></li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Intro -->
+        <section id="intro" class="wrapper style1 fullscreen fade-up">
+            <div class="inner">
+                <h1>Optimal Call Times</h1>
+                <p>Find out the best times to make calls based on your dataset.</p>
+                <form action="{{ url_for('optimal_call_times') }}" method="post" enctype="multipart/form-data">
+                    <label for="file">Upload CSV file:</label>
+                    <input type="file" name="file" id="file" required>
+                    <label for="day">Select day:</label>
+                    <select id="day" name="day">
+                        <option value="Monday" {% if day == 'Monday' %}selected{% endif %}>Monday</option>
+                        <option value="Tuesday" {% if day == 'Tuesday' %}selected{% endif %}>Tuesday</option>
+                        <option value="Wednesday" {% if day == 'Wednesday' %}selected{% endif %}>Wednesday</option>
+                        <option value="Thursday" {% if day == 'Thursday' %}selected{% endif %}>Thursday</option>
+                        <option value="Friday" {% if day == 'Friday' %}selected{% endif %}>Friday</option>
+                        <option value="Saturday" {% if day == 'Saturday' %}selected{% endif %}>Saturday</option>
+                        <option value="Sunday" {% if day == 'Sunday' %}selected{% endif %}>Sunday</option>
+                    </select><br>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section id="results" class="wrapper style1 fade-up">
+            <div class="inner">
+                {% if results %}
+                    <h2>Optimal Call Times for {{ day }}</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ville</th>
+                                <th>Profession</th>
+                                <th>Optimal Call Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                                <tr>
+                                    <td>{{ result['Ville'] }}</td>
+                                    <td>{{ result['Profession'] }}</td>
+                                    <td>{{ result['Time Interval'] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No results to display.</p>
+                {% endif %}
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="wrapper style1-alt">
+        <div class="inner">
+            <ul class="menu">
+                <li><i>&copy; Flying Sales. All rights reserved.</i></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.scrollex.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.scrolly.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>
